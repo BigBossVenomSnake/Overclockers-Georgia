@@ -37,9 +37,9 @@ db.init_app(app)
     # db.create_all()
 
 # with app.app_context():
-   # user = User.query.filter_by(email="datochtb@gmail.com").first()
-   # user.is_admin = True
-   # db.session.commit()
+    # user = User.query.filter_by(email="datochtb@gmail.com").first()
+    # user.is_admin = True
+    # db.session.commit()
 
 # -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
 
