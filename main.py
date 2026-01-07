@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Product, Cart, CartItem, Category
-from flask_sqlalchemy import SQLAlchemy
-from datetime import timedelta
 from functools import wraps
 from flask_wtf import CSRFProtect   
 from sqlalchemy import or_
