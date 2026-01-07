@@ -8,9 +8,9 @@ from flask_wtf import CSRFProtect
 from sqlalchemy import or_
 import os, uuid
 
-app = Flask(__name__, instance_relative_config=True)
-
 # --------------------------------------------------------- konfiguracia ----------------------------------------------------------- #
+
+app = Flask(__name__, instance_relative_config=True)
 
 app.secret_key = "VenomSnakeisgoated_6741"
 csrf = CSRFProtect(app)
@@ -25,6 +25,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///instance/prod
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db = SQLAlchemy(app)
+
 
 # -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
 
