@@ -6,19 +6,30 @@ from functools import wraps
 from flask_wtf import CSRFProtect   
 from sqlalchemy import or_
 import os, uuid
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 
 # --------------------------------------------------------- konfiguracia ----------------------------------------------------------- #
 
 app.secret_key = "VenomSnakeisgoated_6741"
 csrf = CSRFProtect(app)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///products.db"
+
+# -------------------------------------------------------- monacemta bazis konfiguracia--------------------------------------------- #
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+if DATABASE_URL:
+    if DATABASE_URL.startswith("postgres://"):
+        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+else:
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/products.db"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=28)
 
+# -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
+
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db.init_app(app)
