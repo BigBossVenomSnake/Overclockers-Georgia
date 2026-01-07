@@ -1,0 +1,93 @@
+.nav-stripes .nav-item {
+    padding: 0;
+}
+
+.nav-stripes .nav-link {
+    color: white !important;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.nav-stripes .nav-link:hover {
+    background: transparent;
+}
+
+.navbar-nav.nav-stripes {
+    align-items: stretch;
+}
+
+.nav-stripes .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.navbar {
+    background: linear-gradient(
+        45deg,
+        #c1121f,
+        #16a34a,
+        #c1121f,
+        #16a34a,
+        #c1121f,
+        #16a34a
+    ) !important;
+
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.gradient-footer {
+    background: linear-gradient(
+        45deg,
+        #000000,
+        #000000
+    );
+    color: white;
+    padding: 12px 0;
+}
+
+.flash-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+}
+
+.flash-message {
+  background-color: #333;
+  color: #fff;
+  padding: 20px 30px;
+  border-radius: 10px;
+  min-width: 250px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.flash-close {
+  background-color: #555;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px 15px;
+  border-radius: 5px;
+  transition: background-color 0.2s;
+}
+
+.flash-close:hover {
+  background-color: #777;
+}

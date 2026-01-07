@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>კატეგორიები</h1>
+
+{% if current_user and current_user.is_admin %}
+    <div class="mb-3">
+        <a href="{{ url_for('add_category') }}" class="btn btn-secondary">დაამატეთ კატეგორია</a>
+    </div>
+{% endif %}
+
+<div class="row">
+    {% for category in categories %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+
+            {% if category.image_filename %}
+            <img src="{{ url_for('static', filename='uploads/' ~ category.image_filename) }}" class="card-img-top" alt="{{ category.name }}">
+            {% endif %}
+
+            <div class="card-body">
+                <h5 class="card-title">{{ category.name }}</h5>
+                <a href="{{ url_for('category_products', slug=category.slug) }}" class="btn btn-primary">იხილეთ პროდუქტები</a>
+
+                {% if current_user and current_user.is_admin %}
+                    <a href="{{ url_for('add_in_person_product', category_id=category.id) }}" class="btn btn-dark btn-sm mt-2">დაამატეთ პროდუქტი</a>
+
+                    <form action="{{ url_for('delete_category', id=category.id) }}" method="POST" class="mt-2">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            onclick="return confirm('ნამდვილად გსურთ ამ კატეგორიის წაშლა?');">
+                            წაშლა
+                        </button>
+                    </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

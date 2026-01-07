@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">კალათა</h1>
+
+{% if cart.items %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>პროდუქტი</th>
+            <th>სახელი</th>
+            <th>ფასი</th>
+            <th>რაოდენობა</th>
+            <th>ჯამი</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart.items %}
+        <tr>
+            <td>
+                {% if item.product.image_filename %}
+                <img 
+                    src="{{ url_for('static', filename='uploads/' + item.product.image_filename) }}"
+                    alt="{{ item.product.title }}"
+                    style="width: 80px; height: auto; border-radius: 6px;">
+                {% else %}
+                <span>სურათი ვერ მოიძებნა.</span>
+                {% endif %}
+            </td>
+            
+            <td>{{ item.product.title }}</td>
+            <td>${{ item.product.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ item.quantity * item.product.price }}</td>
+            <td>
+                <form action="{{ url_for('remove_from_cart', item_id=item.id) }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger btn-sm">წაშლა</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+</tbody>
+</table>
+
+<h4>ჯამი: ${{ total }}</h4>
+<a href="{{ url_for('checkout') }}" class="btn btn-primary">გადახდა</a>
+
+{% else %}
+<p>თქვენი კალათა ცარიელია.</p>
+{% endif %}
+{% endblock %}

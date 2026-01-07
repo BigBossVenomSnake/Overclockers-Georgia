@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Products in {{ category.name }}</h1>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" class="card-img-top" alt="{{ product.title }}">
+            <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <p class="card-text">{{ product.description[:100] }}...</p>
+                <p class="card-text"><strong>${{ product.price }}</strong></p>
+                <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-primary">იხილეთ პროდუქტის დეტალები</a>
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-success btn-sm">კალათაში დამატება</button>
+                </form>
+                {% if current_user and (current_user.id == product.user_id or current_user.is_admin) %}
+                <form action="{{ url_for('delete_product', id=product.id) }}" method="POST" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        onclick="return confirm('ნამდვილად გსურთ ამ პროდუქტის წაშლა?');">
+                        წაშლა
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

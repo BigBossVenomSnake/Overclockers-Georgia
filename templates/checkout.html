@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form class="needs-validation" novalidate method="POST" action="{{ url_for('checkout_complete') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label for="firstName" class="form-label">ჩაწერეთ სახელი</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" required/>
+            <div class="invalid-feedback">სახელი აუცილებელია.</div>
+        </div>
+        
+        <div class="col-md-6">
+            <label for="lastName" class="form-label">ჩაწერეთ გვარი</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" required/>
+            <div class="invalid-feedback">გვარი აუცილებელია.</div>
+        </div>
+
+        <div class="col-12">
+            <label for="email" class="form-label">ჩაწერეთ ელ.ფოსტა</label>
+            <input type="email" class="form-control" id="email" name="email" required/>
+            <div class="invalid-feedback">ელ.ფოსტა აუცილებელია.</div>
+        </div>
+        
+        <div class="col-md-4">
+            <label for="city" class="form-label">ქალაქი</label>
+            <select class="form-select" id="city" name="city" required>
+                <option value="">აირჩიეთ...</option>
+                <option>თბილისი</option>
+                <option>რუსთავი</option>
+                <option>ზუგდიდი</option>
+                <option>ქუთაისი</option>
+                <option>თელავი</option>
+                <option>ზესტაფონი</option>
+                <option>ჭიათურა</option>
+                <option>ყვარელი</option>
+                <option>ბორჯომი</option>
+                <option>ბათუმი</option>
+            </select>
+            <div class="invalid-feedback">გთხოვთ, აირჩიეთ ქალაქი.</div>
+        </div>
+        
+        <hr class="my-4"/>
+        <button class="btn btn-primary btn-lg w-100" type="submit">შეძენა</button>
+    </div>
+</form>
+
+{% endblock %}

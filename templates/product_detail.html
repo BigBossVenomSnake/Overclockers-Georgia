@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            {% if product.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" class="card-img-top" alt="{{ product.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h2 class="card-title">{{ product.title }}</h2>
+                <p class="text-muted mb-2">
+                    Added by: {{ product.user.name if product.user else "Unknown" }}
+                </p>
+                <p class="card-text">{{ product.description }}</p>
+
+                <div class="d-flex gap-2 mt-3">
+                    <a href="{{ url_for('checkout') }}" class="btn btn-primary flex-grow-1">შეძენა</a>
+                    <a href="{{ url_for('products') }}" class="btn btn-dark flex-grow-1">დაბრუნდით პროდუქტების გვერდზე</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
