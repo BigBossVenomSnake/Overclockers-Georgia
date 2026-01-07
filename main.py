@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Product, Cart, CartItem, Category
+from flask_sqlalchemy import SQLAlchemy
 from datetime import timedelta
 from functools import wraps
 from flask_wtf import CSRFProtect   
 from sqlalchemy import or_
 import os, uuid
+
 app = Flask(__name__, instance_relative_config=True)
 
 # --------------------------------------------------------- konfiguracia ----------------------------------------------------------- #
@@ -16,15 +18,13 @@ csrf = CSRFProtect(app)
 # -------------------------------------------------------- monacemta bazis konfiguracia--------------------------------------------- #
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
-    if DATABASE_URL.startswith("postgres://"):
-        DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-else:
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///instance/products.db"
+if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
+app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///instance/products.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["REMEMBER_COOKIE_DURATION"] = timedelta(days=28)
+
+db = SQLAlchemy(app)
 
 # -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
 
