@@ -26,8 +26,7 @@ if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
 if DATABASE_URL:
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 else:
-    sqlite_path = os.path.join(app.instance_path, "products.db")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sqlite_path}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(app.instance_path, 'products.db')}"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
