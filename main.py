@@ -17,21 +17,19 @@ csrf = CSRFProtect(app)
 
 # -------------------------------------------------------- monacemta bazis konfiguracia--------------------------------------------- #
 
+os.makedirs(app.instance_path, exist_ok=True)
+
 DATABASE_URL = os.environ.get("DATABASE_URL")
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL or "sqlite:///instance/products.db"
+if DATABASE_URL:
+    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
+else:
+    sqlite_path = os.path.join(app.instance_path, "products.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sqlite_path}"
+
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-db = SQLAlchemy(app)
-
-
-# -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
-
-UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 db.init_app(app)
 
@@ -42,6 +40,12 @@ db.init_app(app)
    # user = User.query.filter_by(email="datochtb@gmail.com").first()
    # user.is_admin = True
    # db.session.commit()
+
+# -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
+
+UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 # --------------------------------------------------------------- flask_login ------------------------------------------------------ #
 
