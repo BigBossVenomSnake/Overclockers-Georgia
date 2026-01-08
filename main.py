@@ -15,19 +15,9 @@ csrf = CSRFProtect(app)
 
 # -------------------------------------------------------- monacemta bazis konfiguracia--------------------------------------------- #
 
-os.makedirs(app.instance_path, exist_ok=True)
-
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql+psycopg://", 1)
-
-if DATABASE_URL:
-    app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
-else:
-    sqlite_path = os.path.join(app.instance_path, "products.db")
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{sqlite_path}"
-
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///products.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db.init_app(app)
 
 # with app.app_context():
