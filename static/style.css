@@ -91,3 +91,16 @@
 .flash-close:hover {
   background-color: #777;
 }
+
+.gradient-footer {
+    background: linear-gradient(
+        45deg,
+        #c1121f,
+        #16a34a,
+        #c1121f,
+        #16a34a,
+        #c1121f,
+        #16a34a
+    ) !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6); 
+}
