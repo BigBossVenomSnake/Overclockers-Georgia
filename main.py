@@ -111,7 +111,7 @@ def signup():
         flash("პროფილი შეიქმნა!")
         return redirect(url_for("home"))
 
-    return render_template("signup.html")
+    return render_template("Signup.html")
 
 # --------------------------------------------------- profilshi shesvla ------------------------------------------------------------ #
 
@@ -130,7 +130,7 @@ def login():
         flash("ელ-ფოსტა ან პაროლი არასწორია.")
         return redirect(url_for("login"))
 
-    return render_template("login.html")
+    return render_template("Login.html")
 
 # --------------------------------------------------- profilidan gamosvla ---------------------------------------------------------- #
 
