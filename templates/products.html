@@ -23,7 +23,7 @@
 {% if products %}
     <div class="row g-3">
         {% for product in products %}
-            <div class="col-md-4">
+            <div class="col-md-4 mb-2">
                 <div class="card h-100 shadow-sm">
                     {% if product.image_filename %}
                         <img src="{{ url_for('static', filename='uploads/' ~ product.image_filename) }}" class="card-img-top" alt="{{ product.title }}">
