@@ -9,7 +9,7 @@
         <form method="POST" action="/signup">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="mb-3">
-                <label class="form-label">მეტსახელი</label>
+                <label class="form-label">აირჩიეთ სახელი</label>
                 <input type="text" name="name" class="form-control" required>
             </div>
 
@@ -29,7 +29,7 @@
         </form>
 
         <p class="mt-3">
-            უკვე გაქვთ შექმნილი პროფილი??
+            გაქვთ არსებული პროფილი?
             <a href="/login">პროფილში შესვლა</a>
         </p>
 
