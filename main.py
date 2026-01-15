@@ -24,7 +24,7 @@ db.init_app(app)
     # db.create_all()
 
 # with app.app_context():
-    # user = User.query.filter_by(email="datochtb@gmail.com").first()
+    # user = User.query.filter_by(email="lorem@gmail.com").first() <-- მოცემული ემეილის ნაცვლად გამოიყენეთ სხვა.
     # user.is_admin = True
     # db.session.commit()
 
@@ -58,7 +58,7 @@ def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not current_user.is_authenticated or not current_user.is_admin:
-            flash("ამის გაკეთების უფლება მხოლოდ ადმინებს აქვთ.")
+            flash("ეს მხოლოდ ადმინებს შეუძლიათ ძმაო.")
             return redirect(url_for("home"))
         return f(*args, **kwargs)
     return decorated_function
@@ -71,7 +71,7 @@ def save_image(file):
 
     ext = os.path.splitext(file.filename)[1].lower()
     if ext not in ALLOWED_EXTENSIONS:
-        flash("არასწორი ფაილის ტიპი.")
+        flash("გთხოვთ, აირჩიოთ ნებადართული ფაილის ტიპი.")
         return None
 
     filename = f"{uuid.uuid4().hex}{ext}"
@@ -97,8 +97,8 @@ def signup():
         email = request.form["email"]
         password = request.form["password"]
 
-        if User.query.filter_by(email=email).first():
-            flash("მომხმარებელი მაგ ელ-ფოსტით უკვე არსებობს.")
+        if User.query.filter_by(email=email).first() or User.query.filter_by(name=name).first():
+            flash("მომხმარებელი შეყვანილი ელ-ფოსტით ან სახელით უკვე არსებობს.")
             return redirect(url_for("signup"))
 
         user = User(name=name, email=email)
@@ -108,7 +108,7 @@ def signup():
         db.session.commit()
 
         login_user(user)
-        flash("პროფილი შეიქმნა!")
+        flash(f"პროფილი სახელად {user.name} წარმატებით შეიქმნა!")
         return redirect(url_for("home"))
 
     return render_template("Signup.html")
@@ -127,7 +127,7 @@ def login():
             flash(f"კეთილი იყოს თქვენი დაბრუნება, {user.name}!")
             return redirect(url_for("home"))
 
-        flash("ელ-ფოსტა ან პაროლი არასწორია.")
+        flash("შეყვანილი ელ-ფოსტა ან პაროლი არასწორია.")
         return redirect(url_for("login"))
 
     return render_template("Login.html")
@@ -192,7 +192,7 @@ def add_product():
         db.session.add(product)
         db.session.commit()
 
-        flash("პროდუქტი დაემატა!")
+        flash("პროდუქტი წარმატებით იქნა დამატებული!")
         return redirect(url_for("products"))
 
     return render_template("add_product.html")
@@ -215,7 +215,7 @@ def delete_product(id):
 
     db.session.delete(product)
     db.session.commit()
-    flash("პროდუქტი წარმატებით წაიშალა!")
+    flash("პროდუქტი წარმატებით იქნა წაშლილი!")
     return redirect(request.referrer or url_for("products"))
 
 # ---------------------------------------- kategoriis shignit produqtis damateba (mxolod admins sheulia) --------------------------- #
@@ -249,7 +249,7 @@ def add_in_person_product():
         )
         db.session.add(product)
         db.session.commit()
-        flash("პროდუქტი დამატებული იქნა ფსევდო-ფილიალში!")
+        flash("პროდუქტი დამატებული იქნა 'ფილიალში'!")
         category = Category.query.get(category_id)
         if category:
             return redirect(url_for("category_products", slug=category.slug))
@@ -316,7 +316,7 @@ def delete_category(id):
     db.session.delete(category)
     db.session.commit()
 
-    flash(f"კატეგორია '{category.name}' და მისი პროდუქტები წარმატებით იქნა წაშლილი!")
+    flash(f"'{category.name}' და მისი პროდუქტები წარმატებით იქნა წაშლილი!")
     return redirect(url_for("categories"))
 
 # ---------------------------------------------- KALATASTAN DAKAVSHIREBULI FUNQCIEBI ----------------------------------------------- #
@@ -345,7 +345,7 @@ def add_to_cart(product_id):
         db.session.add(item)
 
     db.session.commit()
-    flash("პროდუქტი დამატებული იქნა კალათაში!")
+    flash("პროდუქტი დაგემატათ კალათაში!")
     return redirect(url_for("cart"))
 
 # --------------------------------------------------------- kalatidan washla ------------------------------------------------------- #
@@ -360,7 +360,7 @@ def remove_from_cart(item_id):
 
     db.session.delete(item)
     db.session.commit()
-    flash("პროდუქტი წარმატებით წაიშალა კალათიდან!")
+    flash("პროდუქტი წაგეშალათ კალათიდან!")
     return redirect(url_for("cart"))
 
 # --------------------------------------------------------- CHECKOUT --------------------------------------------------------------- #
@@ -379,7 +379,7 @@ def checkout_complete():
 
     db.session.commit()
 
-    flash("ოპერაცია დადასტურებულია! გმადლობთ შეძენისთვის!")
+    flash("ოპერეცია დადასტურდა! გმადლობთ შეძენისთვის!")
     return redirect(url_for("home"))
 
 # --------------------------------------------------------- appis gashveba --------------------------------------------------------- #
