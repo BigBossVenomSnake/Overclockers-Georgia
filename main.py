@@ -28,11 +28,6 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-# with app.app_context():
-    # user = User.query.filter_by(email="lorem@gmail.com").first() # რამე სხვა მეილი ჩაწერეთ დატესტვა თუ გინდათ
-    # user.is_admin = True
-    # db.session.commit()
-
 # -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
 
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
@@ -71,7 +66,7 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --------------------------------------------------- kalata, adminis decoratori --------------------------------------------------- #
+# --------------------------------------------- kalata, adminis decoratori, admin url ---------------------------------------------- #
 
 def get_or_create_cart(user):
     cart = Cart.query.filter_by(user_id=user.id).first()
@@ -89,6 +84,14 @@ def admin_required(f):
             return redirect(url_for("home"))
         return f(*args, **kwargs)
     return decorated_function
+
+@app.route("/make-me-admin")
+@login_required
+def make_me_admin():
+    current_user.is_admin = True
+    db.session.commit()
+    flash("მოგენიჭათ ადმინის როლი, გაბრუნებთ მთავარ გვერდზე.")
+    return redirect(url_for("home"))
 
 # # # ------------------------------------------------ WEBSAITIS GVERDEBIS FUNQCIEBI ------------------------------------------- # # #
 
@@ -119,7 +122,7 @@ def toggle_admin(user_id):
     user = User.query.get_or_404(user_id)
 
     if user.id == current_user.id:
-        flash("არ შეგიძლიათ საკუთარი სტატუსის შეცვლა.")
+        flash("არ შეგიძლიათ საკუთარი როლის შეცვლა.")
         return redirect(url_for("admin_users"))
 
     user.is_admin = not user.is_admin
@@ -427,13 +430,6 @@ def checkout_complete():
 
     flash("ოპერეცია დადასტურდა! გმადლობთ შეძენისთვის!")
     return redirect(url_for("home"))
-
-@app.route("/make-me-admin")
-@login_required
-def make_me_admin():
-    current_user.is_admin = True
-    db.session.commit()
-    return "You are now admin. Remove this route."
 
 # # ------------------------------------------------------- appis gashveba ------------------------------------------------------- # #
 
