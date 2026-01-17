@@ -28,10 +28,10 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
-with app.app_context():
-    user = User.query.filter_by(email="lorem@gmail.com").first() # რამე სხვა მეილი ჩაწერეთ დატესტვა თუ გინდათ
-    user.is_admin = True
-    db.session.commit()
+# with app.app_context():
+    # user = User.query.filter_by(email="lorem@gmail.com").first() # რამე სხვა მეილი ჩაწერეთ დატესტვა თუ გინდათ
+    # user.is_admin = True
+    # db.session.commit()
 
 # -------------------------------------------------------- fotoebis atvirtvis konfiguracia ----------------------------------------- #
 
