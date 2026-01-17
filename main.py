@@ -3,9 +3,10 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from models import db, User, Product, Cart, CartItem, Category
 from flask_limiter.util import get_remote_address
 from flask_limiter import Limiter
+from flask_wtf import CSRFProtect
 from functools import wraps
-from flask_wtf import CSRFProtect   
 from sqlalchemy import or_
+from PIL import Image
 import os, uuid
 
 # # -------------------------------------------------------- KONFIGURACIA --------------------------------------------------------- # #
@@ -28,7 +29,7 @@ db.init_app(app)
     # db.create_all()
 
 # with app.app_context():
-    # user = User.query.filter_by(email="lorem@gmail.com").first() # <-- მოცემული იმეილის ნაცვლად გამოიყენეთ სხვა.
+    # user = User.query.filter_by(email="lorem@gmail.com").first() # რამე სხვა მეილი ჩაწერეთ დატესტვა თუ გინდათ
     # user.is_admin = True
     # db.session.commit()
 
@@ -40,6 +41,13 @@ app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 def save_image(file):
     if not file or file.filename == "":
+        return None
+    try:
+        img = Image.open(file)
+        img.verify()
+        file.seek(0)
+    except Exception:
+        flash("არჩეული ფაილი არ არის სურათი.")
         return None
 
     ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}

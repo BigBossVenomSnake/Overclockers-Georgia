@@ -15,9 +15,11 @@
     </div>
     <div class="mb-3">
         <label for="image" class="form-label">ფოტო</label>
-        <input type="file" class="form-control" name="image" id="image" required>
+        <input type="file" class="form-control" name="image" id="image" accept="image/png, image/jpeg, image/webp" required>
     </div>
-    <button type="submit" class="btn btn-primary">დაამატეთ კატეგორია</button>
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">დაამატეთ კატეგორია</button>
+    </div>
 </form>
 
 {% endblock %}
