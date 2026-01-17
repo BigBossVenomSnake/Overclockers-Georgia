@@ -1,21 +1,25 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Product, Cart, CartItem, Category
+from flask_limiter.util import get_remote_address
+from flask_limiter import Limiter
 from functools import wraps
 from flask_wtf import CSRFProtect   
 from sqlalchemy import or_
 import os, uuid
 
-# --------------------------------------------------------- konfiguracia ----------------------------------------------------------- #
+# # -------------------------------------------------------- KONFIGURACIA --------------------------------------------------------- # #
 
 app = Flask(__name__, instance_relative_config=True)
+
+limiter = Limiter(get_remote_address, app=app, default_limits=["200 per day", "50 per hour"])
 
 app.secret_key = "VenomSnakeisgoated_6741"
 csrf = CSRFProtect(app)
 
 # -------------------------------------------------------- monacemta bazis konfiguracia--------------------------------------------- #
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///products.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///allinone.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 db.init_app(app)
@@ -24,7 +28,7 @@ db.init_app(app)
     # db.create_all()
 
 # with app.app_context():
-    # user = User.query.filter_by(email="lorem@gmail.com").first() <-- მოცემული ემეილის ნაცვლად გამოიყენეთ სხვა.
+    # user = User.query.filter_by(email="lorem@gmail.com").first() # <-- მოცემული იმეილის ნაცვლად გამოიყენეთ სხვა.
     # user.is_admin = True
     # db.session.commit()
 
@@ -33,6 +37,21 @@ db.init_app(app)
 UPLOAD_FOLDER = os.path.join(app.root_path, "static", "uploads")
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+def save_image(file):
+    if not file or file.filename == "":
+        return None
+
+    ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
+
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in ALLOWED_EXTENSIONS:
+        flash("გთხოვთ, აირჩიოთ ნებადართული ფაილის ტიპი.")
+        return None
+
+    filename = f"{uuid.uuid4().hex}{ext}"
+    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
+    return filename
 
 # --------------------------------------------------------------- flask_login ------------------------------------------------------ #
 
@@ -44,7 +63,7 @@ login_manager.login_view = "login"
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# --------------------------------------------------- sachiro funqciebi ------------------------------------------------------------ #
+# --------------------------------------------------- kalata, adminis decoratori --------------------------------------------------- #
 
 def get_or_create_cart(user):
     cart = Cart.query.filter_by(user_id=user.id).first()
@@ -63,22 +82,7 @@ def admin_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def save_image(file):
-    if not file or file.filename == "":
-        return None
-
-    ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-
-    ext = os.path.splitext(file.filename)[1].lower()
-    if ext not in ALLOWED_EXTENSIONS:
-        flash("გთხოვთ, აირჩიოთ ნებადართული ფაილის ტიპი.")
-        return None
-
-    filename = f"{uuid.uuid4().hex}{ext}"
-    file.save(os.path.join(current_app.config["UPLOAD_FOLDER"], filename))
-    return filename
-
-# -------------------------------------------------- WEBSAITIS GVERDEBIS FUNQCIEBI ------------------------------------------------- #
+# # # ------------------------------------------------ WEBSAITIS GVERDEBIS FUNQCIEBI ------------------------------------------- # # #
 
 # --------------------------------------------------- mtavari gverdi --------------------------------------------------------------- #
 
@@ -86,11 +90,12 @@ def save_image(file):
 def home():
     return render_template("OverclockersGeorgia.html")
 
-# ---------------------------------------------PROFILEBTAN DAKAVSHIREBULI FUNQCIRBI ------------------------------------------------ #
+# # --------------------------------------------PROFILEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
 # --------------------------------------------------- registracia ------------------------------------------------------------------ #
 
 @app.route("/signup", methods=["GET", "POST"])
+@limiter.limit(limit_value="5 per minute")
 def signup():
     if request.method == "POST":
         name = request.form["name"]
@@ -116,6 +121,7 @@ def signup():
 # --------------------------------------------------- profilshi shesvla ------------------------------------------------------------ #
 
 @app.route("/login", methods=["GET", "POST"])
+@limiter.limit("3 per minute")
 def login():
     if request.method == "POST":
         email = request.form["email"]
@@ -141,7 +147,7 @@ def logout():
     flash("თქვენ გამოხვედით პროფილიდან.")
     return redirect(url_for("home"))
 
-# ------------------------------------------- PRODUQTEBTAN DAKAVSHIREBULI FUNQCIEBI ------------------------------------------------ #
+# # ------------------------------------------ PRODUQTEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
 # ------------------------------------------- produqtebi marketze ------------------------------------------------------------------ #
 
@@ -169,7 +175,7 @@ def product_detail(id):
 
 # ---------------------------------------------------- produqtis damateba ---------------------------------------------------------- #
 
-@app.route("/add-general-product", methods=["GET", "POST"])
+@app.route("/add-product", methods=["GET", "POST"])
 @login_required
 def add_product():
     if request.method == "POST":
@@ -220,7 +226,7 @@ def delete_product(id):
 
 # ---------------------------------------- kategoriis shignit produqtis damateba (mxolod admins sheulia) --------------------------- #
 
-@app.route("/add-product", methods=["GET", "POST"])
+@app.route("/add-category-product", methods=["GET", "POST"])
 @login_required
 @admin_required
 def add_in_person_product():
@@ -258,7 +264,7 @@ def add_in_person_product():
 
     return render_template("add_in_person_product.html", categories=categories)
 
-# ---------------------------------------------KATEGORIEBTAN DAKAVSHIREBULI FUNQCIEBI ---------------------------------------------- #
+# # ------------------------------------------KATEGORIEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
 # ------------------------------------------------------- kategoriebi -------------------------------------------------------------- #
 
@@ -319,7 +325,7 @@ def delete_category(id):
     flash(f"'{category.name}' და მისი პროდუქტები წარმატებით იქნა წაშლილი!")
     return redirect(url_for("categories"))
 
-# ---------------------------------------------- KALATASTAN DAKAVSHIREBULI FUNQCIEBI ----------------------------------------------- #
+# # -------------------------------------------- KALATASTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
 # --------------------------------------------------------- kalata ----------------------------------------------------------------- #
 
@@ -333,6 +339,7 @@ def cart():
 # --------------------------------------------------------- kalatashi damateba ----------------------------------------------------- #
 
 @app.route("/add-to-cart/<int:product_id>", methods=["POST"])
+@limiter.limit("20 per minute")
 @login_required
 def add_to_cart(product_id):
     cart_obj = get_or_create_cart(current_user)
@@ -363,7 +370,7 @@ def remove_from_cart(item_id):
     flash("პროდუქტი წაგეშალათ კალათიდან!")
     return redirect(url_for("cart"))
 
-# --------------------------------------------------------- CHECKOUT --------------------------------------------------------------- #
+# # -------------------------------------------------------- CHECKOUT ------------------------------------------------------------ # #
 
 @app.route("/checkout")
 @login_required
@@ -382,7 +389,7 @@ def checkout_complete():
     flash("ოპერეცია დადასტურდა! გმადლობთ შეძენისთვის!")
     return redirect(url_for("home"))
 
-# --------------------------------------------------------- appis gashveba --------------------------------------------------------- #
+# # ------------------------------------------------------- appis gashveba ------------------------------------------------------- # #
 
 if __name__ == "__main__":
     app.run(host = "0.0.0.0")
