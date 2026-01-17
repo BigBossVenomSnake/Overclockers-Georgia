@@ -98,7 +98,38 @@ def admin_required(f):
 def home():
     return render_template("OverclockersGeorgia.html")
 
-# # --------------------------------------------PROFILEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
+# # ---------------------------------------------- ADMINEBIS DAMATEBA/WASHLA ----------------------------------------------------- # #
+
+# --------------------------------------------------------- gverdi ----------------------------------------------------------------- #
+
+@app.route("/admin/users")
+@login_required
+@admin_required
+def admin_users():
+    users = User.query.order_by(User.id).all()
+    return render_template("admin_users.html", users=users)
+
+# --------------------------------------------------------- damateba/washlis funqcia ----------------------------------------------- #
+
+@app.route("/admin/toggle-admin/<int:user_id>", methods=["POST"])
+@limiter.limit(limit_value="10 per minute")
+@login_required
+@admin_required
+def toggle_admin(user_id):
+    user = User.query.get_or_404(user_id)
+
+    if user.id == current_user.id:
+        flash("არ შეგიძლიათ საკუთარი სტატუსის შეცვლა.")
+        return redirect(url_for("admin_users"))
+
+    user.is_admin = not user.is_admin
+    db.session.commit()
+
+    status = "ადმინი" if user.is_admin else "მომხმარებელი"
+    flash(f"{user.name} ახლა არის {status}.")
+    return redirect(url_for("admin_users"))
+
+# # ------------------------------------------- PROFILEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
 # --------------------------------------------------- registracia ------------------------------------------------------------------ #
 
@@ -129,7 +160,7 @@ def signup():
 # --------------------------------------------------- profilshi shesvla ------------------------------------------------------------ #
 
 @app.route("/login", methods=["GET", "POST"])
-@limiter.limit("3 per minute")
+@limiter.limit("4 per minute")
 def login():
     if request.method == "POST":
         email = request.form["email"]

@@ -30,6 +30,10 @@
         <a class="navbar-brand" href="/">Overclockers Georgia</a>
 
         <ul class="navbar-nav ms-auto nav-stripes">
+            {% if current_user.is_authenticated and current_user.is_admin %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_users') }}">უფლებების გვერდი</a>
+            {% endif %}
+
             <li class="nav-item"><a class="nav-link" href="/">მთავარი გვერდი</a></li>
             <li class="nav-item"><a class="nav-link" href="/products">განცხადებები</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ url_for('categories') }}">პროდუქტები ფილიალში</a></li>
@@ -53,7 +57,7 @@
 
 <footer class="mt-auto gradient-footer">
     <div class="container text-center">
-        <p class="mb-1">© 2026 Overclockers Georgia (Ver. 0.4.6) — All Rights Reserved</p>
+        <p>© 2026 Overclockers Georgia (Ver. 0.4.6) — All Rights Reserved</p>
         <div class="footer-logos d-flex justify-content-center gap-3 mt-1">
             <a href="https://www.tbceducation.ge/">
                 <img src="{{ url_for('static', filename='tbc-logo.png') }}" alt="TBC education" height="40"></a>

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>ადმინის პანელი - მომხმარებლები</h1>
+
+<table cellpadding="10">
+    <tr>
+        <th>ID</th>
+        <th>სახელი</th>
+        <th>ელ-ფოსტა</th>
+        <th>სტატუსი</th>
+        <th>მოქმედება</th>
+    </tr>
+
+    {% for user in users %}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
+        <td>
+            {% if user.is_admin %}
+                ადმინი
+            {% else %}
+                მომხმარებლები
+            {% endif %}
+        </td>
+        <td>
+            {% if user.id != current_user.id %}
+            <form method="POST" action="{{ url_for('toggle_admin', user_id=user.id) }}">
+                {{ csrf_token() }}
+                <button type="submit">
+                    {% if user.is_admin %}
+                        Remove Admin
+                    {% else %}
+                        Make Admin
+                    {% endif %}
+                </button>
+            </form>
+            {% else %}
+                —
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}
