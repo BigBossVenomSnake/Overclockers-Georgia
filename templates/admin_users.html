@@ -28,7 +28,7 @@
         <td>
             {% if user.id != current_user.id %}
             <form method="POST" action="{{ url_for('toggle_admin', user_id=user.id) }}">
-                {{ csrf_token() }}
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit">
                     {% if user.is_admin %}
                         Remove Admin
