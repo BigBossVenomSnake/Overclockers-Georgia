@@ -124,6 +124,10 @@ def toggle_admin(user_id):
     if user.id == current_user.id:
         flash("არ შეგიძლიათ საკუთარი როლის შეცვლა.")
         return redirect(url_for("admin_users"))
+    
+    if user.id == 1:
+        flash("არ შეგიძლიათ შემქმნელის როლის შეცვლა.")
+        return redirect(url_for("admin_users"))
 
     user.is_admin = not user.is_admin
     db.session.commit()
