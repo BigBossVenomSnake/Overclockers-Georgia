@@ -1,3 +1,13 @@
-# python cache
+# Python
 __pycache__/
 *.pyc
+
+# SQLite database
+*.db
+*.sqlite3
+
+# Uploads (optional but recommended)
+static/uploads/
+
+# Environment variables
+.env
