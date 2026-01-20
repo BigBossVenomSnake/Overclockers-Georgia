@@ -99,7 +99,7 @@ def make_me_admin():
 
 @app.route("/")
 def home():
-    return render_template("OverclockersGeorgia.html")
+    return render_template("overclockers_georgia.html")
 
 # # ---------------------------------------------- ADMINEBIS DAMATEBA/WASHLA ----------------------------------------------------- # #
 
@@ -141,7 +141,7 @@ def toggle_admin(user_id):
 # --------------------------------------------------- registracia ------------------------------------------------------------------ #
 
 @app.route("/signup", methods=["GET", "POST"])
-@limiter.limit(limit_value="5 per minute")
+@limiter.limit(limit_value="10 per minute")
 def signup():
     if request.method == "POST":
         name = request.form["name"]
@@ -162,12 +162,12 @@ def signup():
         flash(f"პროფილი სახელად {user.name} წარმატებით შეიქმნა!")
         return redirect(url_for("home"))
 
-    return render_template("Signup.html")
+    return render_template("signup.html")
 
 # --------------------------------------------------- profilshi shesvla ------------------------------------------------------------ #
 
 @app.route("/login", methods=["GET", "POST"])
-@limiter.limit("4 per minute")
+@limiter.limit("10 per minute")
 def login():
     if request.method == "POST":
         email = request.form["email"]
@@ -182,7 +182,7 @@ def login():
         flash("შეყვანილი ელ-ფოსტა ან პაროლი არასწორია.")
         return redirect(url_for("login"))
 
-    return render_template("Login.html")
+    return render_template("login.html")
 
 # --------------------------------------------------- profilidan gamosvla ---------------------------------------------------------- #
 
@@ -308,7 +308,7 @@ def add_in_person_product():
         else:
             return redirect(url_for("products"))
 
-    return render_template("add_in_person_product.html", categories=categories)
+    return render_template("add_category_product.html", categories=categories)
 
 # # ------------------------------------------KATEGORIEBTAN DAKAVSHIREBULI FUNQCIEBI --------------------------------------------- # #
 
@@ -438,4 +438,4 @@ def checkout_complete():
 # # ------------------------------------------------------- appis gashveba ------------------------------------------------------- # #
 
 if __name__ == "__main__":
-    app.run(host = "0.0.0.0")
+    app.run(host = "0.0.0.0", debug=True)

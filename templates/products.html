@@ -33,7 +33,7 @@
                         <p class="card-text text-muted">
                             {{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}
                         </p>
-                        <p class="card-text text-dark fw-bold">${{ product.price }}</p>
+                        <p class="card-text text-dark fw-bold">₾{{ product.price }}</p>
 
                         <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-dark btn-sm">იხილეთ დეტალები</a>
 
@@ -45,7 +45,7 @@
                         {% if current_user and (current_user.id == product.user_id or current_user.is_admin) %}
                             <form action="{{ url_for('delete_product', id=product.id) }}" method="POST" style="display:inline;">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                                <button type="submit" class="btn btn-danger btn-sm"
+                                <button type="submit" class="btn btn-danger btn-sm mt-1"
                                     onclick="return confirm('ნამდვილად გსურთ ამ პროდუქტის წაშლა?');">
                                     წაშლა
                                 </button>

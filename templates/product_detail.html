@@ -13,6 +13,7 @@
                     Added by: {{ product.user.name if product.user else "Unknown" }}
                 </p>
                 <p class="card-text">{{ product.description }}</p>
+                <p class="card-text"><strong>{{ product.price }}</strong></p>
 
                 <div class="d-flex gap-2 mt-3">
                     <a href="{{ url_for('checkout') }}" class="btn btn-primary flex-grow-1">შეძენა</a>

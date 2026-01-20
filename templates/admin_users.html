@@ -22,7 +22,7 @@
             {% if user.is_admin %}
                 ადმინი
             {% else %}
-                მომხმარებლები
+                მომხმარებელი
             {% endif %}
         </td>
         <td>
@@ -31,9 +31,9 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit">
                     {% if user.is_admin %}
-                        Remove Admin
+                        ჩამოართვით ადმინის სტატუსი
                     {% else %}
-                        Make Admin
+                        მიანიჭეთ ადმინის სტატუსი
                     {% endif %}
                 </button>
             </form>
