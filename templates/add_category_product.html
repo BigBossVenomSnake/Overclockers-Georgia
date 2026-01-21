@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <h2 class="mb-3 text-center">დაამატეთ პროდუქტი</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="mb-3">
+                <label for="title" class="form-label">პროდუქტის სახელი</label>
+                <input type="text" class="form-control" id="title" name="title" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">პროდუქტის აღწერილობა</label>
+                <textarea class="form-control" id="description" name="description" rows="4" required></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">ფასი (₾)</label>
+                <input type="number" step="0.01" class="form-control" id="price" name="price" required>
+            </div>  
+
+            <div class="mb-3">
+                <label for="category" class="form-label">კატეგორია</label>
+                <select class="form-control" id="category" name="category_id" required>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}" 
+                            {% if category.id = selected_category_id %} selected {% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="image" class="form-label">პროდუქტის ფოტო</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/png, image/jpeg, image/webp" required>
+            </div>  
+            <div class="mb-3">
+                <button type="submit" class="btn btn-dark w-100">დაამატეთ პროდუქტი</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
