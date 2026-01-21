@@ -88,10 +88,14 @@ def admin_required(f):
 @app.route("/make-me-admin")
 @login_required
 def make_me_admin():
-    current_user.is_admin = True
-    db.session.commit()
-    flash("მოგენიჭათ ადმინის როლი, გაბრუნებთ მთავარ გვერდზე.")
-    return redirect(url_for("home"))
+    if current_user.is_admin == False:
+        current_user.is_admin = True
+        db.session.commit()
+        flash("მოგენიჭათ ადმინის როლი, გაბრუნებთ მთავარ გვერდზე.")
+        return redirect(url_for("home"))
+    else:
+        flash("უკვე გაქვთ ადმინის სტატუსი.")
+        return redirect(url_for("home"))
 
 # # # ------------------------------------------------ WEBSAITIS GVERDEBIS FUNQCIEBI ------------------------------------------- # # #
 
