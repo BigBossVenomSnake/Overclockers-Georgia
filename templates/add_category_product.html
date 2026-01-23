@@ -25,7 +25,7 @@
                 <select class="form-control" id="category" name="category_id" required>
                     {% for category in categories %}
                         <option value="{{ category.id }}" 
-                            {% if category.id = selected_category_id %} selected {% endif %}>
+                            {% if category.id == selected_category_id %} selected {% endif %}>
                             {{ category.name }}
                         </option>
                     {% endfor %}
