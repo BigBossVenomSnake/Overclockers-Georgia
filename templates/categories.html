@@ -24,7 +24,7 @@
                 <a href="{{ url_for('category_products', slug=category.slug) }}" class="btn btn-primary">იხილეთ პროდუქტები</a>
 
                 {% if current_user and current_user.is_admin %}
-                    <a href="{{ url_for('add_in_person_product', category_id=category.id) }}" class="btn btn-dark btn-sm mt-2">დაამატეთ პროდუქტი</a>
+                    <a href="{{ url_for('add_category_product', category_id=category.id) }}" class="btn btn-dark btn-sm mt-2">დაამატეთ პროდუქტი</a>
 
                     <form action="{{ url_for('delete_category', id=category.id) }}" method="POST" class="mt-2">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
