@@ -279,7 +279,7 @@ def delete_product(id):
 @app.route("/add-category-product", methods=["GET", "POST"])
 @login_required
 @admin_required
-def add_in_person_product():
+def add_category_product():
     categories = Category.query.all()
     if request.method == "POST":
         title = request.form["title"]
